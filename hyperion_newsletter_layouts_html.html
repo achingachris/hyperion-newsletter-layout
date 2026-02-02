@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hyperion Newsletter Layout Templates</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card: #f9fafb;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #111827;
+      --chip: #eef2ff;
+      --chip-ink: #3730a3;
+      --radius: 14px;
+      --shadow: 0 1px 2px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    header.site {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .site h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .site .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 80ch;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+
+    .tabs a {
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 12px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+    }
+
+    .tabs a:hover { border-color: #cbd5e1; }
+
+    .layout {
+      margin: 22px 0 34px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+
+    .layout h2 {
+      margin: 0;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .meta {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--chip-ink);
+      border: 1px solid #e0e7ff;
+    }
+
+    .preview {
+      margin-top: 14px;
+      border-top: 1px dashed var(--line);
+      padding-top: 16px;
+    }
+
+    /* Newsletter “email” preview surface */
+    .email {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .email .topbar {
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--card);
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand .name {
+      font-weight: 700;
+      letter-spacing: 0.25px;
+      font-size: 13px;
+    }
+
+    .brand .issue {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .headline {
+      margin: 10px 0 0;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: 0.1px;
+    }
+
+    .deck {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 80ch;
+    }
+
+    .email .body {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .section h3 {
+      margin: 0 0 10px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .bullets {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .bullets li { margin: 6px 0; }
+
+    .grid2 {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 760px) {
+      .grid2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    .signal {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .signal .title {
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 6px 10px;
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .kv div:nth-child(odd) { color: var(--muted); }
+
+    .footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--line);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .link {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(17,24,39,0.25);
+    }
+
+    .link:hover { border-bottom-color: rgba(17,24,39,0.7); }
+
+    /* Utility */
+    .muted { color: var(--muted); }
+    .spacer { height: 6px; }
+    .mono { font-family: var(--mono); }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="site">
+      <h1>Hyperion Newsletter Layout Templates (HTML)</h1>
+      <p class="sub">
+        Five layout designs (Executive Brief, Research Memo, Modular Signals, Narrative Intelligence, Hybrid).
+        Each section below is a self-contained HTML structure styled with simple CSS for fast iteration.
+      </p>
+      <nav class="tabs">
+        <a href="#executive">Executive Brief</a>
+        <a href="#memo">Research Memo</a>
+        <a href="#modular">Modular / Signal-Driven</a>
+        <a href="#narrative">Narrative Intelligence</a>
+        <a href="#hybrid">Hybrid (Exec + Research)</a>
+        <a href="#weekly-digest">Weekly Digest (PDF)</a>
+      </nav>
+    </header>
+
+    <!-- 1) EXECUTIVE BRIEF -->
+    <section id="executive" class="layout">
+      <h2>
+        <span>1) Executive Brief</span>
+        <span class="chip">Skimmable · Forwardable · 2–5 min</span>
+      </h2>
+      <div class="meta">
+        <span class="chip">Top-down</span>
+        <span class="chip">Bullets first</span>
+        <span class="chip">Weekly-ready</span>
+      </div>
+
+      <div class="preview">
+        <div class="email">
+          <div class="topbar">
+            <div class="brand">
+              <div class="name">HYPERION MACRO INTELLIGENCE</div>
+              <div class="issue">Issue #042 · 2026-01-28</div>
+            </div>
+            <div class="headline">Regime: Narrow Leadership, Firm Dollar, Funding Constraints Under Surface Resilience</div>
+            <p class="deck">This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports.</p>
+          </div>
+
+          <div class="body">
+            <div class="section">
+              <h3>Brief</h3>
+              <p>This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports. The consequential signals came not from index levels, but from households under pressure, small businesses shedding jobs, and a funding complex absorbing heavy issuance. Through the Hyperion lens, the system registered a regime that is still functioning, but with trend strength dependent on fewer, more fragile pillars.</p>
+              <p>Beneath the headline resilience, the divergence between markets and the underlying economy is pronounced. Asset prices remain anchored by expectations of eventual easing and the capital cycle around AI. Yet the model highlights the hard constraints on that boom—power, grid capacity, and cooling—which cap its extension. In contrast, consumer and small-business data conflict with the narrative of a healthy expansion. The system is effectively extrapolating strength from a narrow, capital-intensive segment while growth impulses from the broader real economy weaken.</p>
+              <p>Black Friday data confirmed this stress. Nominal sales rose, but item volumes fell while “buy now, pay later” usage surged. Households spent more to acquire less, leaning on embedded leverage. Hyperion reads this as a financing bridge, not a clean growth impulse—consumption supported by credit mechanics rather than rising real income. Small-business labor signals concur, with ADP data showing job losses in the segment in six of the last seven months. The system registers this as a leading indicator of weakening household income dynamics.</p>
+              <p>Market leadership has become acutely concentrated. The top 10 U.S. stocks now approach a historically high share of S&amp;P 500 market cap, with the “Magnificent 7” trading at a significant premium to the rest of the index. Hyperion’s breadth gauges show that positive trend strength at the index level is driven by a narrowing cohort. While markets focused on AI narratives, the system registered deteriorating participation as small caps, equal-weight indices, and cyclicals failed to confirm the cap-weighted trend.</p>
+              <p>Policy and funding dynamics reinforce this fragility. The Federal Reserve remains uncommitted on the timing and pace of cuts, an ambiguity that propagates directly into the volatility and inflation regimes. On the funding side, heavy weekly Treasury bill issuance represents a standing stress test on the system’s absorptive capacity. Hyperion’s liquidity interpretation is that this pattern supports a firm dollar regime but also raises sensitivity to any disruption in demand. Constraint signals from funding markets strengthened this week.</p>
+              <p>Cross-asset price action validated this configuration. In equities, the S&amp;P 500 remained in a range, with mega-cap tech doing the work while the broader market stalled. Trend signals remained constructive, yet internals flagged weakening breadth and dependence on a single leadership complex. Traditional markers of a healthy risk-on regime—stronger small caps and broader cyclical participation—failed to keep pace.</p>
+              <p>Rates added a second layer of distortion. The long end remained elevated despite signs of economic fatigue. The system registered a term structure dominated by term premium and supply rather than growth and inflation dynamics. This makes long bonds a less reliable hedge and stretches the usual relationships between data and yields. Hyperion’s duration tilt remains cautious, reflecting structural funding pressure as a primary driver.</p>
+              <p>The dollar sat at the center of these cross-currents. Heavy Treasury issuance and residual real-rate support kept the dollar regime firm, tightening global financial conditions at the margin. Gold’s resilience fits this pattern: it traded not as a simple inflation hedge, but as a portfolio hedge against fiscal and systemic risk, with defensive signal strength improving.</p>
+              <p>Crypto moved in the opposite direction. Bitcoin retraced, aligning with its role as a high-beta expression of speculative risk appetite. The system interpreted this as an indication that the liquidity impulse is no longer improving at the margin. Crypto-tilt indicators registered deterioration in the highest-beta corners of the complex, consistent with tighter funding conditions not yet obvious in headline credit spreads.</p>
+              <p>Volatility and credit completed the picture. The VIX inverted and then compressed sharply, even as macro uncertainties increased. Hyperion classifies this as a complacent volatility regime where protection is cheapened against a widening distribution of outcomes. Credit indices remained firm, keeping surface measures of stress contained, yet nowcasts show rising strain in short-term funding markets. In synthesis: the system is not yet breaking, but it is becoming more unstable. We continue to anchor positioning in signal rather than speculation; the regime remains constructive on the surface, but its underlying supports are narrowing.</p>
+            </div>
+            <div class="section">
+              <h3>Executive Summary</h3>
+              <ul class="bullets">
+                <li><strong>Regime:</strong> Surface risk resilience with narrowing breadth and rising real-economy strain; stability depends on a small set of supports.</li>
+                <li><strong>Growth:</strong> Household and small-business signals weaken (BNPL up, volumes down, small-business job losses persist).</li>
+                <li><strong>Liquidity/Funding:</strong> Heavy bill issuance tightens the margin and increases sensitivity to demand disruptions; funding constraints strengthen.</li>
+                <li><strong>Market Structure:</strong> Concentration extremes and deteriorating participation raise fragility even with constructive headline trends.</li>
+                <li><strong>Vol/Risk:</strong> Volatility compresses into uncertainty; credit spreads stay firm but short-term funding strain is rising.</li>
+              </ul>
+            </div>
+
+            <div class="grid2">
+              <div class="section">
+                <h3>Key Signals</h3>
+                <ul class="bullets">
+                  <li>Signal A — why it matters</li>
+                  <li>Signal B — why it matters</li>
+                  <li>Signal C — why it matters</li>
+                </ul>
+              </div>
+              <div class="section">
+                <h3>Implications</h3>
+                <ul class="bullets">
+                  <li>Equities: expected behavior</li>
+                  <li>Rates: expected behavior</li>
+                  <li>Credit/FX: key fragilities</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3>What to Watch Next</h3>
+              <ul class="bullets">
+                <li>Data releases: CPI / jobs / PMI</li>
+                <li>Policy: central bank communication</li>
+                <li>Levels: invalidation thresholds</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>© Hyperion · Macro Intelligence Newsletter</div>
+            <div><a class="link" href="#">Unsubscribe</a> · <a class="link" href="#">Preferences</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2) RESEARCH MEMO -->
+    <section id="memo" class="layout">
+      <h2>
+        <span>2) Research Memo</span>
+        <span class="chip">Institutional · Rigorous · 8–15 min</span>
+      </h2>
+      <div class="meta">
+        <span class="chip">Thesis-driven</span>
+        <span class="chip">Scenarios</span>
+        <span class="chip">Counterarguments</span>
+      </div>
+
+      <div class="preview">
+        <div class="email">
+          <div class="topbar">
+            <div class="brand">
+              <div class="name">HYPERION RESEARCH MEMO</div>
+              <div class="issue">Memo · 2026-01-28</div>
+            </div>
+            <div class="headline">Thesis: Liquidity Normalization Drives Cross-Asset Repricing</div>
+            <p class="deck">This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports.</p>
+          </div>
+
+          <div class="body">
+            <div class="section">
+              <h3>Brief</h3>
+              <p>This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports. The consequential signals came not from index levels, but from households under pressure, small businesses shedding jobs, and a funding complex absorbing heavy issuance. Through the Hyperion lens, the system registered a regime that is still functioning, but with trend strength dependent on fewer, more fragile pillars.</p>
+              <p>Beneath the headline resilience, the divergence between markets and the underlying economy is pronounced. Asset prices remain anchored by expectations of eventual easing and the capital cycle around AI. Yet the model highlights the hard constraints on that boom—power, grid capacity, and cooling—which cap its extension. In contrast, consumer and small-business data conflict with the narrative of a healthy expansion. The system is effectively extrapolating strength from a narrow, capital-intensive segment while growth impulses from the broader real economy weaken.</p>
+              <p>Black Friday data confirmed this stress. Nominal sales rose, but item volumes fell while “buy now, pay later” usage surged. Households spent more to acquire less, leaning on embedded leverage. Hyperion reads this as a financing bridge, not a clean growth impulse—consumption supported by credit mechanics rather than rising real income. Small-business labor signals concur, with ADP data showing job losses in the segment in six of the last seven months. The system registers this as a leading indicator of weakening household income dynamics.</p>
+              <p>Market leadership has become acutely concentrated. The top 10 U.S. stocks now approach a historically high share of S&amp;P 500 market cap, with the “Magnificent 7” trading at a significant premium to the rest of the index. Hyperion’s breadth gauges show that positive trend strength at the index level is driven by a narrowing cohort. While markets focused on AI narratives, the system registered deteriorating participation as small caps, equal-weight indices, and cyclicals failed to confirm the cap-weighted trend.</p>
+              <p>Policy and funding dynamics reinforce this fragility. The Federal Reserve remains uncommitted on the timing and pace of cuts, an ambiguity that propagates directly into the volatility and inflation regimes. On the funding side, heavy weekly Treasury bill issuance represents a standing stress test on the system’s absorptive capacity. Hyperion’s liquidity interpretation is that this pattern supports a firm dollar regime but also raises sensitivity to any disruption in demand. Constraint signals from funding markets strengthened this week.</p>
+              <p>Cross-asset price action validated this configuration. In equities, the S&amp;P 500 remained in a range, with mega-cap tech doing the work while the broader market stalled. Trend signals remained constructive, yet internals flagged weakening breadth and dependence on a single leadership complex. Traditional markers of a healthy risk-on regime—stronger small caps and broader cyclical participation—failed to keep pace.</p>
+              <p>Rates added a second layer of distortion. The long end remained elevated despite signs of economic fatigue. The system registered a term structure dominated by term premium and supply rather than growth and inflation dynamics. This makes long bonds a less reliable hedge and stretches the usual relationships between data and yields. Hyperion’s duration tilt remains cautious, reflecting structural funding pressure as a primary driver.</p>
+              <p>The dollar sat at the center of these cross-currents. Heavy Treasury issuance and residual real-rate support kept the dollar regime firm, tightening global financial conditions at the margin. Gold’s resilience fits this pattern: it traded not as a simple inflation hedge, but as a portfolio hedge against fiscal and systemic risk, with defensive signal strength improving.</p>
+              <p>Crypto moved in the opposite direction. Bitcoin retraced, aligning with its role as a high-beta expression of speculative risk appetite. The system interpreted this as an indication that the liquidity impulse is no longer improving at the margin. Crypto-tilt indicators registered deterioration in the highest-beta corners of the complex, consistent with tighter funding conditions not yet obvious in headline credit spreads.</p>
+              <p>Volatility and credit completed the picture. The VIX inverted and then compressed sharply, even as macro uncertainties increased. Hyperion classifies this as a complacent volatility regime where protection is cheapened against a widening distribution of outcomes. Credit indices remained firm, keeping surface measures of stress contained, yet nowcasts show rising strain in short-term funding markets. In synthesis: the system is not yet breaking, but it is becoming more unstable. We continue to anchor positioning in signal rather than speculation; the regime remains constructive on the surface, but its underlying supports are narrowing.</p>
+            </div>
+            <div class="section">
+              <h3>Thesis</h3>
+              <p>The regime remains functional, but trend strength is increasingly dependent on narrow leadership while real-economy strain and funding constraints build beneath the surface.</p>
+            </div>
+
+            <div class="section">
+              <h3>Supporting Evidence</h3>
+              <ul class="bullets">
+                <li>Households: BNPL usage up, unit volumes down — consumption supported by credit mechanics.</li>
+                <li>Small business: persistent job losses — early warning for household income and demand.</li>
+                <li>Market structure: concentration at extremes; breadth/participation fails to confirm cap-weighted strength.</li>
+                <li>Funding: heavy Treasury bill issuance strengthens constraints and raises demand sensitivity.</li>
+              </ul>
+            </div>
+
+            <div class="grid2">
+              <div class="section">
+                <h3>Scenario Analysis</h3>
+                <ul class="bullets">
+                  <li><strong>Base:</strong> what happens if thesis holds</li>
+                  <li><strong>Bull:</strong> what improves / upside path</li>
+                  <li><strong>Bear:</strong> failure mode / downside path</li>
+                </ul>
+              </div>
+              <div class="section">
+                <h3>Counterarguments</h3>
+                <ul class="bullets">
+                  <li>What informed skeptics say</li>
+                  <li>Where they may be right</li>
+                  <li>Why base case still dominates</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3>Risks & Invalidation</h3>
+              <ul class="bullets">
+                <li>What would prove the thesis wrong</li>
+                <li>What would change your confidence</li>
+                <li>Which release/event is most decisive next</li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h3>Conclusion</h3>
+              <p>
+                One paragraph: what matters, why now, and the next verification step.
+              </p>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>© Hyperion · Research Memo</div>
+            <div><a class="link" href="#">Unsubscribe</a> · <a class="link" href="#">Preferences</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) MODULAR / SIGNAL-DRIVEN -->
+    <section id="modular" class="layout">
+      <h2>
+        <span>3) Modular / Signal-Driven</span>
+        <span class="chip">Systematic · AI-friendly · Variable time</span>
+      </h2>
+      <div class="meta">
+        <span class="chip">Repeatable blocks</span>
+        <span class="chip">Signal metadata</span>
+        <span class="chip">Easy to automate</span>
+      </div>
+
+      <div class="preview">
+        <div class="email">
+          <div class="topbar">
+            <div class="brand">
+              <div class="name">HYPERION SIGNAL DIGEST</div>
+              <div class="issue">Daily/Weekly · 2026-01-28</div>
+            </div>
+            <div class="headline">Signals: Liquidity, Rates Vol, Positioning</div>
+            <p class="deck">This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports.</p>
+          </div>
+
+          <div class="body">
+            <div class="section">
+              <h3>Brief</h3>
+              <p>This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports. The consequential signals came not from index levels, but from households under pressure, small businesses shedding jobs, and a funding complex absorbing heavy issuance. Through the Hyperion lens, the system registered a regime that is still functioning, but with trend strength dependent on fewer, more fragile pillars.</p>
+              <p>Beneath the headline resilience, the divergence between markets and the underlying economy is pronounced. Asset prices remain anchored by expectations of eventual easing and the capital cycle around AI. Yet the model highlights the hard constraints on that boom—power, grid capacity, and cooling—which cap its extension. In contrast, consumer and small-business data conflict with the narrative of a healthy expansion. The system is effectively extrapolating strength from a narrow, capital-intensive segment while growth impulses from the broader real economy weaken.</p>
+              <p>Black Friday data confirmed this stress. Nominal sales rose, but item volumes fell while “buy now, pay later” usage surged. Households spent more to acquire less, leaning on embedded leverage. Hyperion reads this as a financing bridge, not a clean growth impulse—consumption supported by credit mechanics rather than rising real income. Small-business labor signals concur, with ADP data showing job losses in the segment in six of the last seven months. The system registers this as a leading indicator of weakening household income dynamics.</p>
+              <p>Market leadership has become acutely concentrated. The top 10 U.S. stocks now approach a historically high share of S&amp;P 500 market cap, with the “Magnificent 7” trading at a significant premium to the rest of the index. Hyperion’s breadth gauges show that positive trend strength at the index level is driven by a narrowing cohort. While markets focused on AI narratives, the system registered deteriorating participation as small caps, equal-weight indices, and cyclicals failed to confirm the cap-weighted trend.</p>
+              <p>Policy and funding dynamics reinforce this fragility. The Federal Reserve remains uncommitted on the timing and pace of cuts, an ambiguity that propagates directly into the volatility and inflation regimes. On the funding side, heavy weekly Treasury bill issuance represents a standing stress test on the system’s absorptive capacity. Hyperion’s liquidity interpretation is that this pattern supports a firm dollar regime but also raises sensitivity to any disruption in demand. Constraint signals from funding markets strengthened this week.</p>
+              <p>Cross-asset price action validated this configuration. In equities, the S&amp;P 500 remained in a range, with mega-cap tech doing the work while the broader market stalled. Trend signals remained constructive, yet internals flagged weakening breadth and dependence on a single leadership complex. Traditional markers of a healthy risk-on regime—stronger small caps and broader cyclical participation—failed to keep pace.</p>
+              <p>Rates added a second layer of distortion. The long end remained elevated despite signs of economic fatigue. The system registered a term structure dominated by term premium and supply rather than growth and inflation dynamics. This makes long bonds a less reliable hedge and stretches the usual relationships between data and yields. Hyperion’s duration tilt remains cautious, reflecting structural funding pressure as a primary driver.</p>
+              <p>The dollar sat at the center of these cross-currents. Heavy Treasury issuance and residual real-rate support kept the dollar regime firm, tightening global financial conditions at the margin. Gold’s resilience fits this pattern: it traded not as a simple inflation hedge, but as a portfolio hedge against fiscal and systemic risk, with defensive signal strength improving.</p>
+              <p>Crypto moved in the opposite direction. Bitcoin retraced, aligning with its role as a high-beta expression of speculative risk appetite. The system interpreted this as an indication that the liquidity impulse is no longer improving at the margin. Crypto-tilt indicators registered deterioration in the highest-beta corners of the complex, consistent with tighter funding conditions not yet obvious in headline credit spreads.</p>
+              <p>Volatility and credit completed the picture. The VIX inverted and then compressed sharply, even as macro uncertainties increased. Hyperion classifies this as a complacent volatility regime where protection is cheapened against a widening distribution of outcomes. Credit indices remained firm, keeping surface measures of stress contained, yet nowcasts show rising strain in short-term funding markets. In synthesis: the system is not yet breaking, but it is becoming more unstable. We continue to anchor positioning in signal rather than speculation; the regime remains constructive on the surface, but its underlying supports are narrowing.</p>
+            </div>
+            <div class="signal">
+              <div class="signal">
+              <div class="title">Signal #1 — Household Stress via BNPL</div>
+              <div class="kv">
+                <div>Signal</div><div>Black Friday: nominal sales up, item volumes down, “buy now, pay later” usage surged.</div>
+                <div>Why it matters</div><div>Consumption looks credit-supported rather than income-supported; a fragile growth impulse.</div>
+                <div>Direction</div><div>Risk-off (real-economy stress)</div>
+                <div>Confidence</div><div>Medium</div>
+                <div>Crowdedness</div><div>Non-consensus</div>
+              </div>
+            </div>
+            </div>
+
+            <div class="signal">
+              <div class="signal">
+              <div class="title">Signal #2 — Small-Business Labor Deterioration</div>
+              <div class="kv">
+                <div>Signal</div><div>ADP: small-business job losses in six of the last seven months.</div>
+                <div>Why it matters</div><div>Leading indicator for household income dynamics and broader demand weakness.</div>
+                <div>Direction</div><div>Risk-off (growth constraint)</div>
+                <div>Confidence</div><div>Medium</div>
+                <div>Crowdedness</div><div>Non-consensus</div>
+              </div>
+            </div>
+            </div>
+
+            <div class="signal">
+              <div class="signal">
+              <div class="title">Signal #3 — Concentration & Breadth Breakdown</div>
+              <div class="kv">
+                <div>Signal</div><div>Index trend holds, but participation weakens; leadership concentrated in a narrow mega-cap cohort.</div>
+                <div>Why it matters</div><div>Market stability becomes dependent on fewer pillars; increases downside convexity on re-rating.</div>
+                <div>Direction</div><div>Neutral-to-risk-off (structure fragility)</div>
+                <div>Confidence</div><div>High</div>
+                <div>Crowdedness</div><div>Consensus</div>
+              </div>
+            </div>
+            </div>
+
+            <div class="section">
+              <h3>Synthesis</h3>
+              <ul class="bullets">
+                <li>What these signals imply together</li>
+                <li>What they do <em>not</em> imply</li>
+                <li>Primary uncertainty</li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h3>Next Checkpoint</h3>
+              <ul class="bullets">
+                <li>The single next release/event that updates confidence</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>© Hyperion · Signal Digest</div>
+            <div><a class="link" href="#">Unsubscribe</a> · <a class="link" href="#">Preferences</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) NARRATIVE INTELLIGENCE -->
+    <section id="narrative" class="layout">
+      <h2>
+        <span>4) Narrative Intelligence</span>
+        <span class="chip">Essay-style · Brand · 10–20 min</span>
+      </h2>
+      <div class="meta">
+        <span class="chip">One core insight</span>
+        <span class="chip">Story-led framing</span>
+        <span class="chip">Less frequent</span>
+      </div>
+
+      <div class="preview">
+        <div class="email">
+          <div class="topbar">
+            <div class="brand">
+              <div class="name">HYPERION — INTELLIGENCE ESSAY</div>
+              <div class="issue">Special Issue · 2026-01-28</div>
+            </div>
+            <div class="headline">The Hidden Cost of “Soft Landings”</div>
+            <p class="deck">This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports.</p>
+          </div>
+
+          <div class="body">
+            <div class="section">
+              <h3>Brief</h3>
+              <p>This week’s macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports. The consequential signals came not from index levels, but from households under pressure, small businesses shedding jobs, and a funding complex absorbing heavy issuance. Through the Hyperion lens, the system registered a regime that is still functioning, but with trend strength dependent on fewer, more fragile pillars.</p>
+              <p>Beneath the headline resilience, the divergence between markets and the underlying economy is pronounced. Asset prices remain anchored by expectations of eventual easing and the capital cycle around AI. Yet the model highlights the hard constraints on that boom—power, grid capacity, and cooling—which cap its extension. In contrast, consumer and small-business data conflict with the narrative of a healthy expansion. The system is effectively extrapolating strength from a narrow, capital-intensive segment while growth impulses from the broader real economy weaken.</p>
+              <p>Black Friday data confirmed this stress. Nominal sales rose, but item volumes fell while “buy now, pay later” usage surged. Households spent more to acquire less, leaning on embedded leverage. Hyperion reads this as a financing bridge, not a clean growth impulse—consumption supported by credit mechanics rather than rising real income. Small-business labor signals concur, with ADP data showing job losses in the segment in six of the last seven months. The system registers this as a leading indicator of weakening household income dynamics.</p>
+              <p>Market leadership has become acutely concentrated. The top 10 U.S. stocks now approach a historically high share of S&amp;P 500 market cap, with the “Magnificent 7” trading at a significant premium to the rest of the index. Hyperion’s breadth gauges show that positive trend strength at the index level is driven by a narrowing cohort. While markets focused on AI narratives, the system registered deteriorating participation as small caps, equal-weight indices, and cyclicals failed to confirm the cap-weighted trend.</p>
+              <p>Policy and funding dynamics reinforce this fragility. The Federal Reserve remains uncommitted on the timing and pace of cuts, an ambiguity that propagates directly into the volatility and inflation regimes. On the funding side, heavy weekly Treasury bill issuance represents a standing stress test on the system’s absorptive capacity. Hyperion’s liquidity interpretation is that this pattern supports a firm dollar regime but also raises sensitivity to any disruption in demand. Constraint signals from funding markets strengthened this week.</p>
+              <p>Cross-asset price action validated this configuration. In equities, the S&amp;P 500 remained in a range, with mega-cap tech doing the work while the broader market stalled. Trend signals remained constructive, yet internals flagged weakening breadth and dependence on a single leadership complex. Traditional markers of a healthy risk-on regime—stronger small caps and broader cyclical participation—failed to keep pace.</p>
+              <p>Rates added a second layer of distortion. The long end remained elevated despite signs of economic fatigue. The system registered a term structure dominated by term premium and supply rather than growth and inflation dynamics. This makes long bonds a less reliable hedge and stretches the usual relationships between data and yields. Hyperion’s duration tilt remains cautious, reflecting structural funding pressure as a primary driver.</p>
+              <p>The dollar sat at the center of these cross-currents. Heavy Treasury issuance and residual real-rate support kept the dollar regime firm, tightening global financial conditions at the margin. Gold’s resilience fits this pattern: it traded not as a simple inflation hedge, but as a portfolio hedge against fiscal and systemic risk, with defensive signal strength improving.</p>
+              <p>Crypto moved in the opposite direction. Bitcoin retraced, aligning with its role as a high-beta expression of speculative risk appetite. The system interpreted this as an indication that the liquidity impulse is no longer improving at the margin. Crypto-tilt indicators registered deterioration in the highest-beta corners of the complex, consistent with tighter funding conditions not yet obvious in headline credit spreads.</p>
+              <p>Volatility and credit completed the picture. The VIX inverted and then compressed sharply, even as macro uncertainties increased. Hyperion classifies this as a complacent volatility regime where protection is cheapened against a widening distribution of outcomes. Credit indices remained firm, keeping surface measures of stress contained, yet nowcasts show rising strain in short-term funding markets. In synthesis: the system is not yet breaking, but it is becoming more unstable. We continue to anchor positioning in signal rather than speculation; the regime remains constructive on the surface, but its underlying supports are narrowing.</p>
+            </div>
+            <div class="section">
+              <h3>Opening Frame</h3>
+              <p>
+                Start with an observation, contradiction, or short anecdote that sets the macro tension.
+              </p>
+            </div>
+
+            <div class="section">
+              <h3>The Core Insight</h3>
+              <p>
+                Explain the main macro truth. Use one through-line; avoid listing unrelated facts.
+              </p>
+              <div class="spacer"></div>
+              <p class="muted">
+                Optional: include a small callout quote or a single chart reference.
+              </p>
+            </div>
+
+            <div class="section">
+              <h3>Why This Matters Now</h3>
+              <ul class="bullets">
+                <li>Connect the insight to the current regime</li>
+                <li>Identify second-order effects</li>
+                <li>Call out common investor mistakes</li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h3>Implications</h3>
+              <ul class="bullets">
+                <li>What changes in behavior this implies</li>
+                <li>Where fragility can surface</li>
+                <li>What would alter the conclusion</li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h3>Closing Thought</h3>
+              <p>
+                The argument resolves to a narrow but important conclusion: the system can remain stable while fragility accumulates, but that stability depends on a shrinking set of supports.
+              </p>
+              <ul class="bullets">
+                <li><strong>Base case:</strong> surface resilience persists as long as mega-cap leadership and funding absorption hold.</li>
+                <li><strong>Primary risk:</strong> a break in funding demand or further deterioration in household and small-business income dynamics.</li>
+                <li><strong>What changes our view:</strong> genuine breadth expansion across equal-weight indices, small caps, and cyclicals.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>© Hyperion · Narrative Intelligence</div>
+            <div><a class="link" href="#">Unsubscribe</a> · <a class="link" href="#">Preferences</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
