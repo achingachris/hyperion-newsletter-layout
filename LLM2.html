@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperion Weekly Macro Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Space+Mono:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #111; color: #fafafa; font-family: 'DM Sans', sans-serif; line-height: 1.6; }
+        .layout-selector { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10,10,10,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 40px; display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .layout-selector span { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #8a8a8a; margin-right: 20px; }
+        .layout-btn { padding: 10px 20px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fafafa; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; }
+        .layout-btn:hover, .layout-btn.active { background: #fafafa; color: #0a0a0a; border-color: #fafafa; }
+        .layouts-container { padding-top: 80px; }
+        .layout { display: none; min-height: 100vh; }
+        .layout.active { display: block; }
+        .chart-container { position: relative; width: 100%; height: 200px; margin: 20px 0; }
+        .chart-container.large { height: 260px; }
+        .video-placeholder { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 16/9; position: relative; overflow: hidden; cursor: pointer; transition: all 0.3s ease; }
+        .video-placeholder:hover { transform: scale(1.01); }
+        .play-button { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1; }
+        .play-button::after { content: ''; width: 0; height: 0; border-left: 20px solid white; border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-left: 5px; }
+        .video-label { margin-top: 16px; font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; z-index: 1; }
+
+        /* LAYOUT 1: INSTITUTIONAL */
+        .layout-1 { background: #fefefe; color: #1a1a1a; font-family: 'Libre Baskerville', serif; }
+        .layout-1 .newsletter { max-width: 720px; margin: 0 auto; padding: 60px 40px; }
+        .layout-1 .header { border-bottom: 2px solid #1a1a1a; padding-bottom: 24px; margin-bottom: 40px; }
+        .layout-1 .logo { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; }
+        .layout-1 .issue-info { display: flex; justify-content: space-between; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666; }
+        .layout-1 .executive-summary { background: #f5f5f0; padding: 32px; margin-bottom: 40px; border-left: 3px solid #1a1a1a; }
+        .layout-1 .summary-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 12px; }
+        .layout-1 .summary-text { font-size: 17px; line-height: 1.7; }
+        .layout-1 .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 30px 0; padding: 24px; background: #fafafa; border: 1px solid #e5e5e5; }
+        .layout-1 .metric-box { text-align: center; padding: 12px; }
+        .layout-1 .metric-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+        .layout-1 .metric-value { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500; }
+        .layout-1 .metric-change { font-family: 'JetBrains Mono', monospace; font-size: 10px; margin-top: 4px; }
+        .layout-1 .metric-change.positive { color: #16a34a; }
+        .layout-1 .metric-change.negative { color: #dc2626; }
+        .layout-1 .section { margin-bottom: 36px; }
+        .layout-1 .section-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
+        .layout-1 .signal-item { display: grid; grid-template-columns: 110px 1fr auto; gap: 20px; padding: 16px 0; border-bottom: 1px solid #f0f0f0; align-items: center; }
+        .layout-1 .signal-driver { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; }
+        .layout-1 .signal-desc { font-size: 14px; color: #333; }
+        .layout-1 .signal-status { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 8px; border-radius: 3px; }
+        .layout-1 .signal-status.deteriorating { background: #fef2f2; color: #dc2626; }
+        .layout-1 .signal-status.stable { background: #fefce8; color: #ca8a04; }
+        .layout-1 .chart-section { background: #fafafa; padding: 24px; margin: 30px 0; border: 1px solid #e5e5e5; }
+        .layout-1 .chart-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #666; margin-bottom: 16px; }
+        .layout-1 .video-section { margin: 40px 0; }
+        .layout-1 .video-placeholder { background: linear-gradient(135deg, #1a1a1a 0%, #333 100%); }
+        .layout-1 .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 20px 0; }
+        .layout-1 .data-table th { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #888; text-align: left; padding: 12px 8px; border-bottom: 2px solid #1a1a1a; }
+        .layout-1 .data-table td { padding: 12px 8px; border-bottom: 1px solid #eee; }
+        .layout-1 .data-table .number { font-family: 'JetBrains Mono', monospace; }
+        .layout-1 .watchlist { background: #1a1a1a; color: #fefefe; padding: 24px 32px; margin-top: 40px; }
+        .layout-1 .watchlist-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+        .layout-1 .watchlist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .layout-1 .watchlist-item { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid #333; }
+        .layout-1 .watchlist-item span:last-child { color: #888; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+        .layout-1 .closing-statement { font-style: italic; text-align: center; padding: 30px 40px; background: #f9f9f6; margin: 40px 0; font-size: 15px; line-height: 1.7; color: #444; }
+        .layout-1 .footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid #e0e0e0; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; text-align: center; }
+
+        /* LAYOUT 2: TERMINAL */
+        .layout-2 { background: #0c0c0c; color: #00ff88; font-family: 'JetBrains Mono', monospace; }
+        .layout-2 .newsletter { max-width: 1000px; margin: 0 auto; padding: 40px; }
+        .layout-2 .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #222; margin-bottom: 30px; }
+        .layout-2 .logo { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; }
+        .layout-2 .timestamp { font-size: 11px; color: #666; }
+        .layout-2 .regime-banner { background: linear-gradient(90deg, rgba(0,255,136,0.1) 0%, transparent 100%); border: 1px solid #00ff88; padding: 20px 24px; margin-bottom: 30px; display: grid; grid-template-columns: 1fr auto auto; gap: 40px; align-items: center; }
+        .layout-2 .regime-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 2px; }
+        .layout-2 .regime-value { font-size: 14px; color: #00ff88; margin-top: 4px; }
+        .layout-2 .regime-metrics { display: flex; gap: 30px; }
+        .layout-2 .regime-metric { text-align: center; }
+        .layout-2 .regime-metric-value { font-size: 20px; font-weight: 500; }
+        .layout-2 .regime-metric-value.negative { color: #ff4444; }
+        .layout-2 .regime-metric-value.neutral { color: #ffaa00; }
+        .layout-2 .regime-indicator { width: 12px; height: 12px; background: #ffaa00; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .layout-2 .thesis-block { padding: 20px; margin-bottom: 30px; border-left: 2px solid #00ff88; background: rgba(0,255,136,0.03); }
+        .layout-2 .thesis-text { font-size: 13px; line-height: 1.8; color: #aaa; }
+        .layout-2 .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 30px; }
+        .layout-2 .stat-box { background: #111; border: 1px solid #222; padding: 16px; text-align: center; }
+        .layout-2 .stat-label { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .layout-2 .stat-value { font-size: 18px; color: #fff; }
+        .layout-2 .stat-change { font-size: 10px; margin-top: 4px; }
+        .layout-2 .stat-change.positive { color: #00ff88; }
+        .layout-2 .stat-change.negative { color: #ff4444; }
+        .layout-2 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px; }
+        .layout-2 .panel { background: #111; border: 1px solid #222; padding: 20px; }
+        .layout-2 .panel-header { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #222; }
+        .layout-2 .driver-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 12px; }
+        .layout-2 .driver-name { color: #888; }
+        .layout-2 .driver-value { color: #00ff88; }
+        .layout-2 .driver-value.negative { color: #ff4444; }
+        .layout-2 .driver-value.neutral { color: #ffaa00; }
+        .layout-2 .chart-panel { background: #111; border: 1px solid #222; padding: 20px; margin-bottom: 24px; }
+        .layout-2 .asset-table { width: 100%; font-size: 11px; }
+        .layout-2 .asset-table th { text-align: left; padding: 8px; color: #555; font-weight: normal; border-bottom: 1px solid #222; }
+        .layout-2 .asset-table td { padding: 10px 8px; border-bottom: 1px solid #1a1a1a; }
+        .layout-2 .asset-table .ticker { color: #00ff88; }
+        .layout-2 .asset-table .change.positive { color: #00ff88; }
+        .layout-2 .asset-table .change.negative { color: #ff4444; }
+        .layout-2 .video-section { margin: 30px 0; }
+        .layout-2 .video-placeholder { background: linear-gradient(135deg, #0a1628 0%, #0d1117 100%); border: 1px solid #222; }
+        .layout-2 .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #222; font-size: 10px; color: #444; text-align: center; }
+
+        /* LAYOUT 3: EDITORIAL */
+        .layout-3 { background: #f8f6f1; color: #1a1a1a; font-family: 'Playfair Display', serif; }
+        .layout-3 .newsletter { max-width: 780px; margin: 0 auto; padding: 80px 60px; }
+        .layout-3 .header { text-align: center; margin-bottom: 60px; }
+        .layout-3 .logo { font-size: 48px; font-weight: 400; letter-spacing: -1px; }
+        .layout-3 .tagline { font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #888; margin-top: 8px; }
+        .layout-3 .divider { width: 60px; height: 1px; background: #c9a227; margin: 24px auto; }
+        .layout-3 .issue-date { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; color: #666; }
+        .layout-3 .hero-thesis { font-size: 26px; line-height: 1.5; text-align: center; margin-bottom: 50px; font-weight: 400; font-style: italic; padding: 0 20px; }
+        .layout-3 .key-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 30px; background: #fff; border: 1px solid #e5e0d5; margin-bottom: 50px; }
+        .layout-3 .key-metric { text-align: center; }
+        .layout-3 .key-metric-value { font-family: 'JetBrains Mono', monospace; font-size: 24px; }
+        .layout-3 .key-metric-value.negative { color: #dc2626; }
+        .layout-3 .key-metric-label { font-family: 'IBM Plex Sans', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-top: 6px; }
+        .layout-3 .key-metric-sub { font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; color: #666; margin-top: 2px; }
+        .layout-3 .key-metric-sub.positive { color: #16a34a; }
+        .layout-3 .drop-cap { float: left; font-size: 72px; line-height: 0.8; padding-right: 12px; padding-top: 4px; color: #c9a227; }
+        .layout-3 .narrative-section { margin-bottom: 40px; }
+        .layout-3 .narrative-section p { font-family: 'Libre Baskerville', serif; font-size: 15px; line-height: 1.9; margin-bottom: 24px; text-align: justify; }
+        .layout-3 .pull-quote { border-left: 3px solid #c9a227; padding-left: 24px; margin: 40px 0; font-size: 20px; line-height: 1.6; font-style: italic; color: #333; }
+        .layout-3 .chart-elegant { background: #fff; padding: 30px; margin: 40px 0; border: 1px solid #e5e0d5; }
+        .layout-3 .chart-elegant-title { font-family: 'IBM Plex Sans', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 20px; text-align: center; }
+        .layout-3 .video-elegant { margin: 50px 0; }
+        .layout-3 .video-elegant-label { font-family: 'IBM Plex Sans', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 16px; text-align: center; }
+        .layout-3 .video-placeholder { background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%); }
+        .layout-3 .signal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 50px 0; padding: 40px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+        .layout-3 .signal-card { text-align: center; padding: 20px; }
+        .layout-3 .signal-label { font-family: 'IBM Plex Sans', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 8px; }
+        .layout-3 .signal-value { font-size: 18px; }
+        .layout-3 .signal-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .layout-3 .signal-indicator.red { background: #dc2626; }
+        .layout-3 .signal-indicator.amber { background: #d97706; }
+        .layout-3 .asset-summary { background: #fff; padding: 30px; margin: 40px 0; border: 1px solid #e5e0d5; }
+        .layout-3 .asset-summary-title { font-family: 'IBM Plex Sans', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 20px; }
+        .layout-3 .asset-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; }
+        .layout-3 .asset-change { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+        .layout-3 .asset-change.positive { color: #16a34a; }
+        .layout-3 .asset-change.negative { color: #dc2626; }
+        .layout-3 .closing { text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid #ddd; }
+        .layout-3 .signature { font-style: italic; font-size: 14px; color: #666; line-height: 1.8; }
+
+        /* LAYOUT 4: BRUTALIST */
+        .layout-4 { background: #fff; color: #000; font-family: 'Syne', sans-serif; }
+        .layout-4 .newsletter { max-width: 1100px; margin: 0 auto; padding: 40px; }
+        .layout-4 .header { display: grid; grid-template-columns: 1fr auto; gap: 40px; padding-bottom: 20px; border-bottom: 4px solid #000; margin-bottom: 40px; }
+        .layout-4 .logo { font-size: 72px; font-weight: 800; letter-spacing: -4px; line-height: 1; text-transform: uppercase; }
+        .layout-4 .meta { text-align: right; font-family: 'Space Mono', monospace; font-size: 11px; }
+        .layout-4 .thesis-massive { font-size: 42px; font-weight: 700; line-height: 1.15; margin-bottom: 40px; max-width: 85%; }
+        .layout-4 .thesis-massive span { background: #000; color: #fff; padding: 0 8px; }
+        .layout-4 .stats-brutal { display: grid; grid-template-columns: repeat(6, 1fr); border: 4px solid #000; margin-bottom: 40px; }
+        .layout-4 .stat-brutal { padding: 20px; text-align: center; border-right: 2px solid #000; }
+        .layout-4 .stat-brutal:last-child { border-right: none; }
+        .layout-4 .stat-brutal-value { font-size: 28px; font-weight: 700; }
+        .layout-4 .stat-brutal-value.positive { color: #16a34a; }
+        .layout-4 .stat-brutal-value.negative { color: #dc2626; }
+        .layout-4 .stat-brutal-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; color: #666; }
+        .layout-4 .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+        .layout-4 .main-content { border-right: 2px solid #000; padding-right: 40px; }
+        .layout-4 .section-header { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #000; }
+        .layout-4 .narrative-brutal { font-size: 15px; line-height: 1.7; margin-bottom: 30px; }
+        .layout-4 .signal-block { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #ddd; }
+        .layout-4 .signal-driver { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #666; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .layout-4 .signal-text { font-size: 14px; line-height: 1.6; }
+        .layout-4 .chart-brutal { border: 4px solid #000; padding: 20px; margin: 30px 0; }
+        .layout-4 .chart-brutal-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+        .layout-4 .video-brutal { margin: 40px 0; }
+        .layout-4 .video-placeholder { background: #000; border: 4px solid #000; }
+        .layout-4 .video-brutal-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+        .layout-4 .metric-pill { display: inline-flex; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .layout-4 .metric-pill.negative { background: rgba(220,38,38,0.15); color: #dc2626; }
+        .layout-4 .metric-pill.neutral { background: rgba(217,119,6,0.15); color: #d97706; }
+        .layout-4 .data-box { background: #000; color: #fff; padding: 24px; margin-bottom: 20px; }
+        .layout-4 .data-box-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; opacity: 0.6; }
+        .layout-4 .data-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; font-size: 13px; }
+        .layout-4 .data-item .value.positive { color: #4ade80; }
+        .layout-4 .data-item .value.negative { color: #f87171; }
+        .layout-4 .concentration-box { border: 4px solid #000; padding: 20px; margin-bottom: 20px; }
+        .layout-4 .concentration-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+        .layout-4 .concentration-value { font-size: 48px; font-weight: 800; line-height: 1; }
+        .layout-4 .concentration-label { font-family: 'Space Mono', monospace; font-size: 10px; color: #666; margin-top: 8px; }
+        .layout-4 .watchlist-brutal { border: 4px solid #000; padding: 24px; }
+        .layout-4 .watchlist-brutal h4 { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+        .layout-4 .watchlist-brutal li { font-family: 'Space Mono', monospace; font-size: 12px; margin-bottom: 10px; padding-left: 20px; position: relative; list-style: none; }
+        .layout-4 .watchlist-brutal li::before { content: '→'; position: absolute; left: 0; }
+        .layout-4 .watchlist-brutal li span { color: #888; font-size: 10px; display: block; margin-top: 2px; }
+        .layout-4 .footer { margin-top: 60px; padding-top: 20px; border-top: 4px solid #000; font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; }
+
+        /* LAYOUT 5: PREMIUM DARK */
+        .layout-5 { background: linear-gradient(180deg, #0a0a0f 0%, #12121a 100%); color: #e0e0e0; font-family: 'DM Sans', sans-serif; }
+        .layout-5 .newsletter { max-width: 820px; margin: 0 auto; padding: 60px 40px; }
+        .layout-5 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .layout-5 .logo { font-size: 20px; font-weight: 700; letter-spacing: 3px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .layout-5 .issue-badge { font-size: 11px; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; color: #888; }
+        .layout-5 .hero-card { background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 40px; margin-bottom: 40px; }
+        .layout-5 .regime-tag { display: inline-block; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 12px; background: rgba(255,170,0,0.2); border-radius: 4px; color: #ffaa00; margin-bottom: 20px; }
+        .layout-5 .hero-thesis { font-size: 22px; line-height: 1.5; font-weight: 500; color: #fff; }
+        .layout-5 .metrics-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 40px; }
+        .layout-5 .metric-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px 16px; text-align: center; }
+        .layout-5 .metric-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #666; margin-bottom: 8px; }
+        .layout-5 .metric-value { font-size: 18px; font-weight: 600; color: #fff; }
+        .layout-5 .metric-value.positive { color: #4ade80; }
+        .layout-5 .metric-value.negative { color: #f87171; }
+        .layout-5 .metric-value.neutral { color: #fbbf24; }
+        .layout-5 .metric-change { font-size: 10px; margin-top: 4px; color: #666; }
+        .layout-5 .section { margin-bottom: 36px; }
+        .layout-5 .section-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #667eea; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .layout-5 .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(102,126,234,0.3) 0%, transparent 100%); }
+        .layout-5 .content-block { font-size: 14px; line-height: 1.8; color: #b0b0b0; }
+        .layout-5 .chart-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin: 30px 0; }
+        .layout-5 .chart-title { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+        .layout-5 .video-card { margin: 40px 0; }
+        .layout-5 .video-card-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-bottom: 12px; }
+        .layout-5 .video-placeholder { background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; }
+        .layout-5 .signal-list { list-style: none; }
+        .layout-5 .signal-list li { padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; align-items: start; }
+        .layout-5 .signal-driver { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #667eea; font-weight: 600; }
+        .layout-5 .signal-text { font-size: 13px; color: #ccc; line-height: 1.6; }
+        .layout-5 .signal-status { font-size: 10px; padding: 4px 10px; border-radius: 4px; }
+        .layout-5 .signal-status.deteriorating { background: rgba(248,113,113,0.15); color: #f87171; }
+        .layout-5 .signal-status.stable { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .layout-5 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .layout-5 .asset-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; }
+        .layout-5 .asset-card-title { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+        .layout-5 .asset-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 13px; }
+        .layout-5 .asset-row .name { color: #aaa; }
+        .layout-5 .asset-row .value { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+        .layout-5 .asset-row .value.positive { color: #4ade80; }
+        .layout-5 .asset-row .value.negative { color: #f87171; }
+        .layout-5 .watchlist-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin-top: 40px; }
+        .layout-5 .watchlist-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+        .layout-5 .watchlist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .layout-5 .watch-item { font-size: 12px; padding: 12px 16px; background: rgba(102,126,234,0.08); border-radius: 8px; color: #a0a0ff; display: flex; justify-content: space-between; }
+        .layout-5 .watch-item span:last-child { color: #666; font-size: 10px; }
+        .layout-5 .closing-card { background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; margin-top: 40px; text-align: center; }
+        .layout-5 .closing-text { font-size: 14px; color: #888; font-style: italic; line-height: 1.7; }
+        .layout-5 .footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; font-size: 11px; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="layout-selector">
+        <span>Layout</span>
+        <button class="layout-btn active" data-layout="1">1. Institutional</button>
+        <button class="layout-btn" data-layout="2">2. Terminal</button>
+        <button class="layout-btn" data-layout="3">3. Editorial</button>
+        <button class="layout-btn" data-layout="4">4. Brutalist</button>
+        <button class="layout-btn" data-layout="5">5. Premium</button>
+    </div>
+
+    <div class="layouts-container">
+        <!-- LAYOUT 1 -->
+        <div class="layout layout-1 active" id="layout-1">
+            <div class="newsletter">
+                <header class="header"><div class="logo">Hyperion</div><div class="issue-info"><span>Weekly Macro Intelligence</span><span>Week 48 · December 2024</span></div></header>
+                <div class="executive-summary"><div class="summary-label">Executive Summary</div><p class="summary-text">This week's macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports. The system registered a regime that is still functioning, but with trend strength dependent on fewer, more fragile pillars.</p></div>
+                <div class="metrics-grid"><div class="metric-box"><div class="metric-label">S&P 500</div><div class="metric-value">4,567</div><div class="metric-change positive">+0.8% WoW</div></div><div class="metric-box"><div class="metric-label">10Y Yield</div><div class="metric-value">4.32%</div><div class="metric-change negative">+12bps</div></div><div class="metric-box"><div class="metric-label">DXY</div><div class="metric-value">103.8</div><div class="metric-change">+0.4%</div></div><div class="metric-box"><div class="metric-label">VIX</div><div class="metric-value">14.2</div><div class="metric-change negative">Complacent</div></div></div>
+                <section class="section"><h3 class="section-title">Video Brief</h3><div class="video-section"><div class="video-placeholder"><div class="play-button"></div><span class="video-label">Weekly Macro Walkthrough · 12:34</span></div></div></section>
+                <section class="section"><h3 class="section-title">Core Driver Status</h3><div class="signal-item"><span class="signal-driver">Liquidity</span><span class="signal-desc">Heavy Treasury issuance absorbing capacity. Dollar regime firm. Tightening at the margin under funding weight.</span><span class="signal-status deteriorating">Deteriorating</span></div><div class="signal-item"><span class="signal-driver">Growth</span><span class="signal-desc">Consumer stress confirmed via Black Friday—nominal up, volumes down, BNPL surging. Small business job losses in 6 of 7 months.</span><span class="signal-status deteriorating">Deteriorating</span></div><div class="signal-item"><span class="signal-driver">Trend</span><span class="signal-desc">Index signals constructive but driven by narrowing cohort. Top 10 stocks at historic 32% concentration.</span><span class="signal-status stable">Narrowing</span></div><div class="signal-item"><span class="signal-driver">Volatility</span><span class="signal-desc">VIX compressed despite widening outcome distribution. Protection cheapened against macro uncertainties.</span><span class="signal-status stable">Complacent</span></div></section>
+                <div class="chart-section"><div class="chart-title">Market Concentration — Top 10 Share of S&P 500</div><div class="chart-container"><canvas id="chart1-1"></canvas></div></div>
+                <section class="section"><h3 class="section-title">Cross-Asset Summary</h3><table class="data-table"><thead><tr><th>Asset</th><th>Level</th><th style="text-align:right">WoW</th><th style="text-align:right">Signal</th></tr></thead><tbody><tr><td>S&P 500</td><td class="number">4,567</td><td class="number" style="color:#16a34a">+0.8%</td><td class="number">Range, narrow leadership</td></tr><tr><td>Russell 2000</td><td class="number">1,847</td><td class="number" style="color:#dc2626">-0.6%</td><td class="number">Failed to confirm</td></tr><tr><td>10Y Treasury</td><td class="number">4.32%</td><td class="number" style="color:#dc2626">+12bps</td><td class="number">Supply > data</td></tr><tr><td>Gold</td><td class="number">$2,024</td><td class="number" style="color:#16a34a">+0.9%</td><td class="number">Systemic hedge bid</td></tr><tr><td>Bitcoin</td><td class="number">$43,200</td><td class="number" style="color:#dc2626">-4.2%</td><td class="number">Liquidity proxy weakening</td></tr></tbody></table></section>
+                <div class="watchlist"><div class="watchlist-title">Forward Watchlist</div><div class="watchlist-grid"><div class="watchlist-item"><span>PCE Inflation</span><span>Dec 22</span></div><div class="watchlist-item"><span>FOMC Minutes</span><span>Jan 3</span></div><div class="watchlist-item"><span>Treasury Auctions</span><span>Ongoing</span></div><div class="watchlist-item"><span>China PMI</span><span>Dec 31</span></div></div></div>
+                <div class="closing-statement">We continue to anchor positioning in signal rather than speculation. The regime remains constructive on the surface, but its underlying supports are narrowing.</div>
+                <footer class="footer">Hyperion Capital · Signal Over Narrative · Systematic Macro Intelligence</footer>
+            </div>
+        </div>
+
+        <!-- LAYOUT 2 -->
+        <div class="layout layout-2" id="layout-2">
+            <div class="newsletter">
+                <header class="header"><div class="logo">▲ HYPERION TERMINAL</div><div class="timestamp">2024-12-15 08:00 UTC · WEEK 48</div></header>
+                <div class="regime-banner"><div><div class="regime-label">Current Regime</div><div class="regime-value">RISK-ON · FRAGILE · NARROW BASE</div></div><div class="regime-metrics"><div class="regime-metric"><div class="regime-metric-value neutral">32%</div><div class="regime-label">Top 10 Conc.</div></div><div class="regime-metric"><div class="regime-metric-value negative">-4.2%</div><div class="regime-label">BTC WoW</div></div></div><div class="regime-indicator"></div></div>
+                <div class="thesis-block"><p class="thesis-text">Surface resilience masks deepening real economy strain. Market structure reliant on narrow supports. Growth impulses from broader economy weakening while liquidity tightens at margin under Treasury funding weight.</p></div>
+                <div class="stats-row"><div class="stat-box"><div class="stat-label">SPX</div><div class="stat-value">4,567</div><div class="stat-change positive">+0.8%</div></div><div class="stat-box"><div class="stat-label">NDX</div><div class="stat-value">15,892</div><div class="stat-change positive">+1.2%</div></div><div class="stat-box"><div class="stat-label">RTY</div><div class="stat-value">1,847</div><div class="stat-change negative">-0.6%</div></div><div class="stat-box"><div class="stat-label">10Y</div><div class="stat-value">4.32%</div><div class="stat-change negative">+12bp</div></div><div class="stat-box"><div class="stat-label">VIX</div><div class="stat-value">14.2</div><div class="stat-change negative">COMPL</div></div></div>
+                <div class="video-section"><div class="video-placeholder"><div class="play-button"></div><span class="video-label">System Walkthrough · 12:34</span></div></div>
+                <div class="grid"><div class="panel"><div class="panel-header">Core Drivers</div><div class="driver-row"><span class="driver-name">Liquidity Impulse</span><span class="driver-value negative">TIGHTENING</span></div><div class="driver-row"><span class="driver-name">Growth Impulse</span><span class="driver-value negative">DETERIORATING</span></div><div class="driver-row"><span class="driver-name">Trend Strength</span><span class="driver-value neutral">NARROWING</span></div><div class="driver-row"><span class="driver-name">Dollar Regime</span><span class="driver-value">FIRM</span></div><div class="driver-row"><span class="driver-name">Vol Regime</span><span class="driver-value negative">COMPLACENT</span></div></div><div class="panel"><div class="panel-header">Cross-Asset Matrix</div><table class="asset-table"><thead><tr><th>Asset</th><th>Level</th><th>WoW</th></tr></thead><tbody><tr><td class="ticker">SPX</td><td>4,567</td><td class="change positive">+0.8%</td></tr><tr><td class="ticker">RTY</td><td>1,847</td><td class="change negative">-0.6%</td></tr><tr><td class="ticker">GOLD</td><td>$2,024</td><td class="change positive">+0.9%</td></tr><tr><td class="ticker">BTC</td><td>$43,200</td><td class="change negative">-4.2%</td></tr></tbody></table></div></div>
+                <div class="chart-panel"><div class="panel-header">Market Breadth vs Index</div><div class="chart-container large"><canvas id="chart2-1"></canvas></div></div>
+                <footer class="footer">HYPERION SYSTEMS · SIGNAL > NARRATIVE · REGIME CONSTRUCTIVE BUT FRAGILE</footer>
+            </div>
+        </div>
+
+        <!-- LAYOUT 3 -->
+        <div class="layout layout-3" id="layout-3">
+            <div class="newsletter">
+                <header class="header"><h1 class="logo">Hyperion</h1><p class="tagline">Macro Intelligence Weekly</p><div class="divider"></div><p class="issue-date">Week Forty-Eight · December 2024</p></header>
+                <p class="hero-thesis">"The tape looked orderly, but the foundation narrowed—a week where surface resilience concealed deepening fragility in the real economy."</p>
+                <div class="key-metrics"><div class="key-metric"><div class="key-metric-value">4,567</div><div class="key-metric-label">S&P 500</div><div class="key-metric-sub positive">+0.8%</div></div><div class="key-metric"><div class="key-metric-value negative">32%</div><div class="key-metric-label">Top 10 Conc.</div><div class="key-metric-sub">Historic High</div></div><div class="key-metric"><div class="key-metric-value">14.2</div><div class="key-metric-label">VIX</div><div class="key-metric-sub">Complacent</div></div><div class="key-metric"><div class="key-metric-value negative">-4.2%</div><div class="key-metric-label">Bitcoin</div><div class="key-metric-sub">Liquidity Proxy</div></div></div>
+                <div class="video-elegant"><div class="video-elegant-label">This Week's Macro Walkthrough</div><div class="video-placeholder"><div class="play-button"></div><span class="video-label">12:34 · December 15, 2024</span></div></div>
+                <div class="narrative-section"><p><span class="drop-cap">T</span>his week's macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports. The consequential signals came not from index levels, but from households under pressure, small businesses shedding jobs, and a funding complex absorbing heavy issuance.</p><div class="pull-quote">"While markets focused on index levels, the system registered deteriorating participation—small caps, equal-weight indices, and cyclicals failed to confirm the cap-weighted trend."</div><p>Black Friday data confirmed this stress. Nominal sales rose, but item volumes fell while "buy now, pay later" usage surged. Households spent more to acquire less, leaning on embedded leverage.</p></div>
+                <div class="chart-elegant"><div class="chart-elegant-title">Market Concentration Reaching Historic Extremes</div><div class="chart-container large"><canvas id="chart3-1"></canvas></div></div>
+                <div class="signal-grid"><div class="signal-card"><div class="signal-label">Liquidity</div><div class="signal-value"><span class="signal-indicator red"></span>Tightening</div></div><div class="signal-card"><div class="signal-label">Trend</div><div class="signal-value"><span class="signal-indicator amber"></span>Narrowing</div></div><div class="signal-card"><div class="signal-label">Growth</div><div class="signal-value"><span class="signal-indicator red"></span>Deteriorating</div></div></div>
+                <div class="asset-summary"><div class="asset-summary-title">Cross-Asset Performance</div><div class="asset-row"><span>S&P 500</span><span class="asset-change positive">+0.8%</span></div><div class="asset-row"><span>Russell 2000</span><span class="asset-change negative">-0.6%</span></div><div class="asset-row"><span>Gold</span><span class="asset-change positive">+0.9%</span></div><div class="asset-row"><span>Bitcoin</span><span class="asset-change negative">-4.2%</span></div></div>
+                <div class="closing"><p class="signature">We continue to anchor positioning in signal rather than speculation.<br>The regime remains constructive on the surface, but its underlying supports are narrowing.</p></div>
+            </div>
+        </div>
+
+        <!-- LAYOUT 4 -->
+        <div class="layout layout-4" id="layout-4">
+            <div class="newsletter">
+                <header class="header"><div class="logo">Hyperion</div><div class="meta"><div class="meta-item">Week 48</div><div class="meta-item">Dec 2024</div></div></header>
+                <h2 class="thesis-massive">Surface resilience. <span>Real economy strain.</span> Narrow supports.</h2>
+                <div class="stats-brutal"><div class="stat-brutal"><div class="stat-brutal-value positive">4,567</div><div class="stat-brutal-label">S&P 500</div></div><div class="stat-brutal"><div class="stat-brutal-value negative">32%</div><div class="stat-brutal-label">Top 10 Conc.</div></div><div class="stat-brutal"><div class="stat-brutal-value negative">-4.2%</div><div class="stat-brutal-label">Bitcoin</div></div><div class="stat-brutal"><div class="stat-brutal-value">14.2</div><div class="stat-brutal-label">VIX</div></div><div class="stat-brutal"><div class="stat-brutal-value negative">+12bp</div><div class="stat-brutal-label">10Y Move</div></div><div class="stat-brutal"><div class="stat-brutal-value negative">6/7</div><div class="stat-brutal-label">SMB Job Loss</div></div></div>
+                <div class="video-brutal"><div class="video-brutal-label">Weekly System Walkthrough</div><div class="video-placeholder"><div class="play-button"></div><span class="video-label">12:34</span></div></div>
+                <div class="content-grid"><div class="main-content"><h3 class="section-header">The Disconnect</h3><p class="narrative-brutal">This week's macro disconnect widened: surface resilience in assets, deepening strain in the real economy, and a market structure reliant on a narrow set of supports.</p><div class="chart-brutal"><div class="chart-brutal-title">Breadth Divergence</div><div class="chart-container"><canvas id="chart4-1"></canvas></div></div><h3 class="section-header">Signal</h3><div class="signal-block"><div class="signal-driver"><span>Liquidity</span><span class="metric-pill negative">↓ Tightening</span></div><p class="signal-text">Heavy Treasury issuance absorbing capacity. Dollar regime firm. Crypto retraced 4.2%.</p></div><div class="signal-block"><div class="signal-driver"><span>Growth</span><span class="metric-pill negative">↓ Deteriorating</span></div><p class="signal-text">Black Friday: nominal up, volumes down, BNPL surging. Small business job losses 6 of 7 months.</p></div><div class="signal-block"><div class="signal-driver"><span>Trend</span><span class="metric-pill neutral">— Narrowing</span></div><p class="signal-text">Top 10 stocks at 32% of S&P—historic high. Breadth failing to confirm.</p></div></div><div class="sidebar"><div class="concentration-box"><div class="concentration-title">Market Concentration</div><div class="concentration-value">32%</div><div class="concentration-label">Top 10 Share of SPX<br>→ Historic Extreme</div></div><div class="data-box"><div class="data-box-title">Cross-Asset</div><div class="data-item"><span>SPX</span><span class="value positive">+0.8%</span></div><div class="data-item"><span>RTY</span><span class="value negative">-0.6%</span></div><div class="data-item"><span>Gold</span><span class="value positive">+0.9%</span></div><div class="data-item"><span>BTC</span><span class="value negative">-4.2%</span></div></div><div class="watchlist-brutal"><h4>Forward Watch</h4><ul><li>PCE Inflation<span>Dec 22</span></li><li>Treasury Auctions<span>Ongoing</span></li><li>FOMC Minutes<span>Jan 3</span></li></ul></div></div></div>
+                <footer class="footer">Signal over narrative. System over discretion. Regime constructive but fragile.</footer>
+            </div>
+        </div>
+
+        <!-- LAYOUT 5 -->
+        <div class="layout layout-5" id="layout-5">
+            <div class="newsletter">
+                <header class="header"><div class="logo">HYPERION</div><div class="issue-badge">Week 48 · Dec 2024</div></header>
+                <div class="hero-card"><span class="regime-tag">Risk-On · Fragile · Narrow Base</span><h1 class="hero-thesis">Surface resilience in assets masks deepening strain in the real economy. Market structure now reliant on narrow supports—the system is functioning, but trend strength depends on fewer, more fragile pillars.</h1></div>
+                <div class="metrics-row"><div class="metric-card"><div class="metric-label">S&P 500</div><div class="metric-value">4,567</div><div class="metric-change">+0.8%</div></div><div class="metric-card"><div class="metric-label">Top 10 Conc.</div><div class="metric-value negative">32%</div><div class="metric-change">Historic</div></div><div class="metric-card"><div class="metric-label">Bitcoin</div><div class="metric-value negative">$43.2K</div><div class="metric-change">-4.2%</div></div><div class="metric-card"><div class="metric-label">VIX</div><div class="metric-value neutral">14.2</div><div class="metric-change">Complacent</div></div><div class="metric-card"><div class="metric-label">10Y Yield</div><div class="metric-value negative">4.32%</div><div class="metric-change">+12bps</div></div></div>
+                <div class="video-card"><div class="video-card-label">Weekly System Walkthrough</div><div class="video-placeholder"><div class="play-button"></div><span class="video-label">12:34 · December 15, 2024</span></div></div>
+                <section class="section"><h3 class="section-title">Core Driver Status</h3><ul class="signal-list"><li><span class="signal-driver">Liquidity</span><span class="signal-text">Heavy Treasury issuance absorbing capacity. Crypto retraced, indicating impulse no longer improving.</span><span class="signal-status deteriorating">Tightening</span></li><li><span class="signal-driver">Growth</span><span class="signal-text">Black Friday: nominal up, volumes down, BNPL surging. Small business job losses 6 of 7 months.</span><span class="signal-status deteriorating">Deteriorating</span></li><li><span class="signal-driver">Trend</span><span class="signal-text">Index-level constructive but driven by narrowing cohort. Top 10 at historic 32%.</span><span class="signal-status stable">Narrowing</span></li></ul></section>
+                <div class="chart-card"><div class="chart-title">Market Breadth Divergence</div><div class="chart-container large"><canvas id="chart5-1"></canvas></div></div>
+                <section class="section"><h3 class="section-title">Cross-Asset Summary</h3><div class="two-col"><div class="asset-card"><div class="asset-card-title">Equities & Risk</div><div class="asset-row"><span class="name">S&P 500</span><span class="value positive">+0.8%</span></div><div class="asset-row"><span class="name">Russell 2000</span><span class="value negative">-0.6%</span></div><div class="asset-row"><span class="name">Bitcoin</span><span class="value negative">-4.2%</span></div></div><div class="asset-card"><div class="asset-card-title">Rates & Hedges</div><div class="asset-row"><span class="name">10Y Yield</span><span class="value negative">+12bps</span></div><div class="asset-row"><span class="name">Gold</span><span class="value positive">+0.9%</span></div><div class="asset-row"><span class="name">VIX</span><span class="value negative">-8.3%</span></div></div></div></section>
+                <div class="watchlist-card"><div class="watchlist-title">Forward Watchlist</div><div class="watchlist-grid"><div class="watch-item"><span>PCE Inflation</span><span>Dec 22</span></div><div class="watch-item"><span>FOMC Minutes</span><span>Jan 3</span></div><div class="watch-item"><span>Treasury Auctions</span><span>Ongoing</span></div><div class="watch-item"><span>China PMI</span><span>Dec 31</span></div></div></div>
+                <div class="closing-card"><p class="closing-text">We continue to anchor positioning in signal rather than speculation.<br>The regime remains constructive on the surface, but its underlying supports are narrowing.</p></div>
+                <footer class="footer">Hyperion Capital · Signal Over Narrative · Systematic Macro Intelligence</footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const buttons = document.querySelectorAll('.layout-btn');
+        const layouts = document.querySelectorAll('.layout');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const layoutNum = btn.dataset.layout;
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                layouts.forEach(l => l.classList.remove('active'));
+                document.getElementById('layout-' + layoutNum).classList.add('active');
+                setTimeout(initCharts, 100);
+            });
+        });
+
+        function initCharts() {
+            Object.values(Chart.instances).forEach(c => c.destroy());
+            
+            const ctx1 = document.getElementById('chart1-1');
+            if (ctx1 && ctx1.offsetParent !== null) {
+                new Chart(ctx1, { type: 'line', data: { labels: ['2019','2020','2021','2022','2023','2024'], datasets: [{ label: 'Top 10 %', data: [22,25,28,26,30,32], borderColor: '#1a1a1a', backgroundColor: 'rgba(26,26,26,0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 18, max: 36, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } } } });
+            }
+            const ctx2 = document.getElementById('chart2-1');
+            if (ctx2 && ctx2.offsetParent !== null) {
+                new Chart(ctx2, { type: 'line', data: { labels: ['Oct','Nov W1','Nov W2','Nov W3','Nov W4','Dec W1','Dec W2'], datasets: [{ label: 'SPX', data: [4200,4320,4380,4450,4510,4545,4567], borderColor: '#00ff88', tension: 0.3, pointRadius: 0 }, { label: 'Equal Weight', data: [4200,4280,4300,4320,4290,4270,4250], borderColor: '#ff4444', tension: 0.3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#888', font: { size: 10 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } }, x: { grid: { display: false }, ticks: { color: '#666' } } } } });
+            }
+            const ctx3 = document.getElementById('chart3-1');
+            if (ctx3 && ctx3.offsetParent !== null) {
+                new Chart(ctx3, { type: 'line', data: { labels: ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'], datasets: [{ label: 'Top 10 %', data: [18,17,19,20,22,25,28,26,30,32], borderColor: '#c9a227', backgroundColor: 'rgba(201,162,39,0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 14, max: 36, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } } } });
+            }
+            const ctx4 = document.getElementById('chart4-1');
+            if (ctx4 && ctx4.offsetParent !== null) {
+                new Chart(ctx4, { type: 'line', data: { labels: ['W1','W2','W3','W4','W5','W6','W7','W8'], datasets: [{ label: 'SPX', data: [100,102,105,106,107,108,108.5,109], borderColor: '#000', borderWidth: 3, tension: 0.3, pointRadius: 0 }, { label: 'Breadth', data: [100,101,102,100,99,97,96,95], borderColor: '#dc2626', borderWidth: 2, borderDash: [5,5], tension: 0.3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { size: 10 } } } }, scales: { y: { grid: { color: 'rgba(0,0,0,0.1)' } }, x: { grid: { display: false } } } } });
+            }
+            const ctx5 = document.getElementById('chart5-1');
+            if (ctx5 && ctx5.offsetParent !== null) {
+                new Chart(ctx5, { type: 'line', data: { labels: ['Oct','Nov W1','Nov W2','Nov W3','Nov W4','Dec W1','Dec W2'], datasets: [{ label: 'S&P 500', data: [4200,4320,4380,4450,4510,4545,4567], borderColor: '#667eea', tension: 0.3, pointRadius: 3 }, { label: 'Equal Weight', data: [4200,4280,4300,4320,4290,4270,4250], borderColor: '#f87171', tension: 0.3, pointRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#888', font: { size: 10 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } }, x: { grid: { display: false }, ticks: { color: '#666' } } } } });
+            }
+        }
+        document.addEventListener('DOMContentLoaded', initCharts);
+    </script>
+</body>
+</html>
